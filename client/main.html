@@ -1,0 +1,193 @@
+<head>
+  <title>Album</title>
+</head>
+
+<body>
+  <div class="container">
+    {{> addImg}}
+    {{> editImg}}
+    {{> navBar}}
+    {{> mainBody}}
+    {{> footerBar}}
+  </div>
+</body>
+
+<template name="navBar">
+  <header>
+    <div class="collapse bg-dark" id="navbarHeader">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4 class="text-white">About</h4>
+            <p class="text-muted">literalMe is your go to place for book reviews and ratings of new and upcoming books as well as the classics.</p>
+          </div>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4 class="text-white">You can...</h4>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-white">Follow on Twitter</a></li>
+              <li><a href="#" class="text-white">Like on Facebook</a></li>
+              <li><a href="#" class="text-white">Email us</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+      <div class="container d-flex justify-content-between">
+        <a href="#" class="navbar-brand d-flex align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewBox="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          <strong>Album</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+</template>
+
+<template name="myJumbo">
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Image Share</h1>
+      <p class="lead text-muted">Glad you found your way here. It's always a good time to read a book. Find your passion amongst the stars by choosing from our many categories tailored just for you.</p>
+      <p>
+        <!-- <a href="#" class="btn btn-primary my-2">Top Rated Book</a> -->
+        <a href="#" class="js-addImg btn btn-primary">Add New Image</a>
+      </p>
+    </div>
+  </section>
+</template>
+
+<template name="mainBody">
+  <main role="main">
+    {{> myJumbo}}
+    <div class="album py-5 bg-light">
+      <div class="container">
+        <div class="row">
+          {{#each allImages}}
+          <div class="col-md-4" id="{{_id}}">
+            <div class="card mb-4 shadow-sm">
+              <img src='{{path}}' alt="temp photo">
+              <div class="card-body">
+                <p class="card-text"><h3>{{title}}</h3>{{description}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="js-editImage btn btn-sm btn-outline-secondary"><i class="zmdi zmdi-edit zmdi-hc-lg"></i></button>
+                    <i  class="zmdi zmdi-hc-2x zmdi-delete js-deleteImg"></i>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div> <!-- /col -->
+          {{/each}}
+        </div> <!-- /row for all cards -->
+      </div>
+    </div>
+
+  </main>
+</template>
+
+<template name="footerBar">
+  <footer class="text-muted">
+    <div class="container">
+      <p class="float-right">
+        <a href="#">Back to top</a>
+      </p>
+      <p>&copy; WeTookYourDesignsInc</p>      
+    </div>
+  </footer>
+</template>
+
+
+<template name ="addImg">
+  
+
+
+<!-- Modal -->
+<div class="modal fade" id="addImgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addImgModalLabel">Add Image to Gallery</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <img id="addImgPreview" src="52c66f1f8b.png" alt="">
+      <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Title</span>
+      </div>
+      <input type="text" id="imgTitle" name="Title" class="form-control" placeholder="Image Title" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <div class="input-group">
+     <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Image</span>
+      </div>
+      <input type="text" id="imgPath" name="Image" class="form-control" placeholder="Image Path" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <div class="input-group-prepend">
+    <span class="input-group-text">Description</span>
+  </div>
+  <textarea id = "imgDesc" class="form-control" aria-label="Description"></textarea>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary js-saveImg">Save Image</button>
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+
+
+<template name ="editImg">
+  
+
+
+<!-- Modal -->
+<div class="modal fade" id="editImgModal" tabindex="-1" role="dialog" aria-labelledby="editImgModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editImgModalLabel">Edit Image</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input id="eId" type="hidden">
+          <img class="mb-3" id="ImgPreview" src="user-512.png" alt="">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">Image</span>
+            </div>
+            <input id="eimgPath" type="text" class="form-control" placeholder="Image path" aria-label="title">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">Title</span>
+            </div>
+            <input id="eimgTitle" type="text" class="form-control" placeholder="Title of image" aria-label="title">
+          </div>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Image Description</span>
+            </div>
+            <textarea id="eimgDesc" class="form-control" aria-label="Description"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary js-cancelAdd">Cancel</button>
+          <button type="button" class="btn btn-primary js-updateImg">Update</button>
+        </div>
+      </div>
+    </div>
+</div>
+</template>
