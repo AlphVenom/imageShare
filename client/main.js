@@ -7,6 +7,7 @@ import './main.html';
 import '../lib/collections.js';
 
 Session.set('imgLimit', 3);
+Session.set('userFilter', false);
 
 Accounts.ui.config({
 
@@ -23,8 +24,8 @@ var scrollTop = $(this).scrollTop();
 //test if we are going down
 if (scrollTop > lastScrollTop){
   //yes we are heading down..
-  Session.get('imgLimit', Session.get('imgLimit') + 3);
-
+  Session.get('imgLimit', Session.set('imgLimit') + 3);
+  
 }
 lastScrollTop = scrollTop;
 }
@@ -47,7 +48,7 @@ Template.addImg.events({
 		 $("#imgDesc").val('');
 		 $("#addImgPreview").attr('src','52c66f1f8b.png');
 		 $("#addImgModal").modal("hide");
-		 imagesDB.insert({"title":imgTitle, "path":imgPath, "description":imgDesc, "createdOn":new Date().getTime()});
+		 imagesDB.insert({"title":imgTitle, "path":imgPath, "description":imgDesc, "createdOn":new Date().getTime(), "postedBy":Meteor.user()._id});
 	},
 
 
@@ -99,6 +100,7 @@ Template.addImg.events({
 		return imgCreatedOn + timeUnit;
 	},
 	allImages(){
+		if (Session.get("userFilter") == false){
 		//Get time 15 seconds ago
 		var prevTime = new Date() - 15000;
 		var newResults = imagesDB.find({"createdOn":{$gte:prevTime}}).count();
@@ -109,16 +111,20 @@ Template.addImg.events({
 			//else sort by ratings then date
 			return imagesDB.find({}, {sort:{imgRate:-1, createdOn:1}, limit:Session.get('imgLimit')});
 	}
+   } else {
+   return imagesDB.find({postedBy:Session.get("userFilter")}, {sort:{imgRate:-1, createdOn:1}, limit:Session.get('imgLimit')});
+   }	
+			
+	},
+			
+	userName(){
+		var uId = imagesDB.findOne({_id:this._id}).postedBy;
+		return Meteor.users.findOne({_id:uId}).username;
+	},
+	userId(){
+		return imagesDB.findOne({_id:this._id}).postedBy;
 		
-},
-userLoggedIn(){
-	if(Meteor.user()){
-		return true;
-	} else {
-		return false;
-	}
-}		
-
+	}	
 
 });
 
@@ -144,6 +150,15 @@ Template.mainBody.events({
 		var imgId = this.data_id;
 		var rating = $(event.currentTarget).data('userrating');
 		imagesDB.update({_id:imgId}, {$set:{'imgRate':rating}});
+	},
+
+	'click .js-showUser'(event){
+		event.preventDefault();
+		Session.set("userFilter", event.currentTarget.id);
+	},
+	'click .js-clearFilter'(event){
+		event.preventDefault();
+		Session.set("userFilter", false);
 	}
 });
 
